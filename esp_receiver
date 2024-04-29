@@ -1,0 +1,43 @@
+import network
+import espnow
+
+
+from machine import Pin 
+led = Pin(33, mode=Pin.OUT)
+fan = Pin(15, mode=Pin.OUT)
+
+# A WLAN interface must be active to send()/recv()
+sta = network.WLAN(network.STA_IF)
+sta.active(True)
+sta.disconnect()   # Because ESP8266 auto-connects to last Access Point
+
+e = espnow.ESPNow()
+e.active(True)
+
+while True:
+    v = 0
+    host, msg = e.recv()
+    u = msg
+    v = u.decode('UTF-8')
+    #v = int(v)
+    print(v)
+    #if msg:             # msg == None if timeout in recv()
+        #if msg == b'end':
+         #   break
+    if v == "1":
+        print(v)
+        led(0)
+        print("Light off")
+        #
+    elif v == "2":
+        print(v)
+        led(1)
+        print("Light on")
+    elif v == "3":
+        print(v)
+        fan(0)
+        print("Fan off")
+    elif v == "4":
+        print(v)
+        fan(1)
+        print("Fan on")
